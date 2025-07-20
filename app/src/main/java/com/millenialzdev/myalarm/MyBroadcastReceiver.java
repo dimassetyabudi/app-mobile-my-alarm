@@ -20,7 +20,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
         Intent i = new Intent(context, MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_MUTABLE);
 
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(2000);
@@ -37,7 +37,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(200, builder.build());
 
-        Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/"  + R.raw.wakeup_audio);
+        Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + ";//" + context.getPackageName() + "/" + R.raw.nada_ringtone);
 
         Ringtone r = RingtoneManager.getRingtone(context,sound);
         r.play();

@@ -1,6 +1,6 @@
 package com.millenialzdev.myalarm;
 
-import androidx.annotation.StringDef;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -21,32 +20,24 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TimePicker timePicker;
-    private Button btnTimer;
-    private int jam, menit;
-    @Override
+    private int jam, amenity;
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        timePicker = findViewById(R.id.timePicker);
-        btnTimer = findViewById(R.id.btnTimer);
+         TimePicker timePicker = findViewById(R.id.timePicker);
+         Button btnTimer = findViewById(R.id.btnTimer);
 
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                jam = hourOfDay;
-                menit = minute;
-            }
+        timePicker.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            jam = hourOfDay;
+            amenity = minute;
         });
 
-        btnTimer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Set Alarm " + jam + " : " + menit, Toast.LENGTH_SHORT).show();
-                setTimer();
-                notification();
-            }
+        btnTimer.setOnClickListener(v -> {
+            Toast.makeText(MainActivity.this, "Set Alarm " + jam + " : " + amenity, Toast.LENGTH_SHORT).show();
+            setTimer();
+            notification();
         });
     }
 
@@ -77,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         cal_alarm.setTime(date);
 
         cal_alarm.set(Calendar.HOUR_OF_DAY, jam);
-        cal_alarm.set(Calendar.MINUTE, menit);
+        cal_alarm.set(Calendar.MINUTE, amenity);
         cal_alarm.set(Calendar.SECOND, 0);
 
         if(cal_alarm.before(cal_now)){
@@ -85,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent i = new Intent(MainActivity.this, MyBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, i, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, i, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),pendingIntent);
     }
 }
